@@ -42,9 +42,9 @@ var daemonCommmand = &cobra.Command{
 		config := lib.Config{
 			CheckpointInterval:  time.Hour,
 			StorageDir:          filepath.Join(configDir, ".timer"),
-			IdleDuration:        time.Second * 10,
-			IdleWatcherInterval: time.Second * 5,
-			WakeWatcherInterval: time.Second * 5,
+			IdleDuration:        time.Minute * 5,
+			IdleWatcherInterval: time.Minute,
+			WakeWatcherInterval: time.Second * 30,
 		}
 		fmt.Printf("Using config %v\n", config)
 
