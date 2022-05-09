@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"syscall"
 	"time"
-	"timer/lib"
+	"worktimer/lib"
 
 	"github.com/spf13/cobra"
 )
@@ -41,7 +41,7 @@ var daemonCommmand = &cobra.Command{
 
 		config := lib.Config{
 			CheckpointInterval:  time.Hour,
-			StorageDir:          filepath.Join(configDir, ".timer"),
+			StorageDir:          filepath.Join(configDir, "timer"),
 			IdleDuration:        time.Minute * 5,
 			IdleWatcherInterval: time.Minute,
 			WakeWatcherInterval: time.Second * 30,

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/rpc"
-	"timer/lib"
+	"worktimer/lib"
 
 	"github.com/spf13/cobra"
 )

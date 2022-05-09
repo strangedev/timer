@@ -1,4 +1,4 @@
-module timer
+module worktimer
 
 go 1.18
 

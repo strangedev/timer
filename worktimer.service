@@ -1,0 +1,9 @@
+[Unit]
+Description=Timer application that counts active time in X11
+
+[Service]
+Type=simple
+ExecStart=worktimer daemon
+
+[Install]
+WantedBy=default.target

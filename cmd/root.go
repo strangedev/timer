@@ -8,9 +8,9 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "timer",
-	Short: "Timer counts working hours",
-	Long:  `Timer counts working hours by looking at idle and active times and generates nice reports.`,
+	Use:   "worktimer",
+	Short: "worktimer counts working hours",
+	Long:  `worktimer counts working hours by looking at idle times in X11.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Do Stuff Here
 	},

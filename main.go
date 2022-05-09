@@ -1,7 +1,7 @@
 package main
 
 import (
-	"timer/cmd"
+	"worktimer/cmd"
 )
 
 func main() {
