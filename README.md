@@ -22,15 +22,19 @@ systemctl --user enable --now worktimer
 
 ## Commands
 
+Use `worktimer help` to view the help. Use `worktimer help [COMMAND]` to view the help for any command.
+
+These are the most commonly used commands:
 ```shell
 worktimer start # Starts recording times
 worktimer stop # Stops recording times
 worktimer note "Some text" # Records a note in the current time slice so you know what you did at that time
+worktimer status # Prints the status of the timer
 ```
 
 ## How it works
 
-When the timer is started, it records times to `${HOME}/.config/timer` in JSON format.
+When the timer is started, it records times to `${HOME}/.config/worktimer` in JSON format.
 The times are recorded in the form of time slices:
 
 ```json5
