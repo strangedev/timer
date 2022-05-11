@@ -8,6 +8,8 @@ import "time"
 
 func GetIdleTime() (time.Duration, error) {
 	idleMs := int64(C.getIdleMs())
+	C.fflush(nil)
+
 	if idleMs < 0 {
 		return 0, &X11Error{}
 	}
