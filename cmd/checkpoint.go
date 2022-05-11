@@ -11,27 +11,25 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(suspendCommand)
+	rootCmd.AddCommand(checkpointCommand)
 }
 
-var suspendCommand = &cobra.Command{
-	Use:   "suspend",
-	Short: "Suspend the timer",
-	Long:  "Stops the timer, but instructs it to automatically restart on activity.",
+var checkpointCommand = &cobra.Command{
+	Use:   "checkpoint",
+	Short: "Saves the current state to disk",
+	Long:  "Starts a new slice and dumps all past slices to disk.",
 	Run: func(cmd *cobra.Command, args []string) {
 		client, err := rpc.DialHTTP("tcp", "localhost:1234")
 		if err != nil {
 			log.Fatal("Dialing:", err)
 		}
 
-		suspendArgs := &lib.StartStopArgs{
-			Reason: "Manual suspend",
-		}
+		checkpointArgs := &lib.VoidArgs{}
 		var reply lib.VoidReply
-		err = client.Call("Daemom.SuspendTimer", suspendArgs, &reply)
+		err = client.Call("Daemon.TriggerCheckpoint", checkpointArgs, &reply)
 		if err != nil {
 			log.Fatal("rpc error: ", err)
 		}
-		fmt.Println("Suspended the timer.")
+		fmt.Println("Created a checkpoint.")
 	},
 }

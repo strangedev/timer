@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 	"net/rpc"
-	"worktimer/lib"
 
 	"github.com/spf13/cobra"
+	"github.com/strangedev/worktimer/lib"
 )
 
 func init() {
@@ -26,7 +26,7 @@ var stopCommand = &cobra.Command{
 			Reason: "Manual stop",
 		}
 		var reply lib.VoidReply
-		err = client.Call("Timer.RPC_Stop", stopArgs, &reply)
+		err = client.Call("Daemon.StopTimer", stopArgs, &reply)
 		if err != nil {
 			log.Fatal("rpc error: ", err)
 		}

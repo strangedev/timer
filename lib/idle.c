@@ -1,3 +1,5 @@
+#include "idle.h"
+
 #include <stdio.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/scrnsaver.h>

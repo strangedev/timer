@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/rpc"
-	"worktimer/lib"
+
+	"github.com/strangedev/worktimer/lib"
 
 	"github.com/spf13/cobra"
 )
@@ -27,7 +28,7 @@ var wakeCommand = &cobra.Command{
 			Reason: "Manual wake",
 		}
 		var reply lib.VoidReply
-		err = client.Call("Timer.RPC_Wake", wakeArgs, &reply)
+		err = client.Call("Daemon.WakeTimer", wakeArgs, &reply)
 		if err != nil {
 			log.Fatal("rpc error: ", err)
 		}

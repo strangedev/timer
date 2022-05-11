@@ -1,18 +1,15 @@
 package lib
 
 import (
-	"encoding/json"
-	"io/ioutil"
-	"path/filepath"
 	"time"
 )
 
 type Timer struct {
-	pastSlices     []TimeSlice
-	currentSlice   *TimeSlice
-	isStopped      bool
-	isSuspended    bool
-	suspendedSince time.Time
+	pastSlices   []TimeSlice
+	currentSlice *TimeSlice
+	isStopped    bool
+	isSuspended  bool
+	suspendedAt  time.Time
 }
 
 func CreateTimer() *Timer {
@@ -33,12 +30,12 @@ func (t *Timer) IsStopped() bool {
 	return t.isStopped
 }
 
-func (t *Timer) SuspendedFor() (time.Duration, error) {
+func (t *Timer) SuspendedSince() time.Duration {
 	if !t.isSuspended {
-		return 0, &TimerIsNotSuspended{}
+		return 0
 	}
 
-	return time.Now().Sub(t.suspendedSince), nil
+	return time.Since(t.suspendedAt)
 }
 
 func (t *Timer) StartNewSliceIfNotExists(reason string) {
@@ -97,7 +94,7 @@ func (t *Timer) Suspend(reason string) error {
 
 	t.EndCurrentSliceIfExists(reason)
 	t.isSuspended = true
-	t.suspendedSince = time.Now()
+	t.suspendedAt = time.Now()
 
 	return nil
 }
@@ -116,70 +113,32 @@ func (t *Timer) Wake(reason string) error {
 	return nil
 }
 
-func (t *Timer) Checkpoint(config Config) error {
+func (t *Timer) ContinueWithNewSlice(reason string) {
 	timerWasStarted := t.currentSlice != nil
 
-	t.EndCurrentSliceIfExists("Checkpoint")
-
-	data, err := json.MarshalIndent(t.pastSlices, "", "  ")
-	if err != nil {
-		return err
-	}
-
-	err = ioutil.WriteFile(filepath.Join(config.StorageDir, time.Now().Local().Format("2006-01-02T15:04:05-0700")+".json"), data, 0644)
-	if err != nil {
-		return err
-	}
+	t.EndCurrentSliceIfExists(reason)
 
 	if timerWasStarted {
-		t.StartNewSliceIfNotExists("Resume after checkpoint")
+		t.StartNewSliceIfNotExists(reason)
 	}
-
-	return nil
 }
 
-type VoidArgs struct{}
-
-type VoidReply struct{}
-
-type StartStopArgs struct {
-	Reason string
-}
-
-type NoteArgs struct {
-	Note string
-}
-
-func (t *Timer) RPC_Start(args *StartStopArgs, reply *VoidReply) error {
-	return t.Start(args.Reason)
-}
-
-func (t *Timer) RPC_Stop(args *StartStopArgs, reply *VoidReply) error {
-	return t.Stop(args.Reason)
-}
-
-func (t *Timer) RPC_Suspend(args *StartStopArgs, reply *VoidReply) error {
-	return t.Suspend(args.Reason)
-}
-
-func (t *Timer) RPC_Wake(args *StartStopArgs, reply *VoidReply) error {
-	return t.Wake(args.Reason)
-}
-
-func (t *Timer) GetPastSlices(args *VoidArgs, reply *[]TimeSlice) error {
-	*reply = t.pastSlices
-
-	return nil
-}
-
-func (t *Timer) RPC_Note(args *NoteArgs, reply *VoidReply) error {
+func (t *Timer) Note(note string) error {
 	t.Wake("Note added")
 
 	if t.IsStopped() {
 		return &TimerIsNotYetStarted{}
 	}
 
-	t.currentSlice.Notes = append(t.currentSlice.Notes, args.Note)
+	t.currentSlice.Notes = append(t.currentSlice.Notes, note)
 
 	return nil
+}
+
+func (t *Timer) PastSlices() []TimeSlice {
+	return t.pastSlices
+}
+
+func (t *Timer) ClearPastSlices() {
+	t.pastSlices = make([]TimeSlice, 0)
 }

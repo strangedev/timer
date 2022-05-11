@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/rpc"
-	"worktimer/lib"
+
+	"github.com/strangedev/worktimer/lib"
 
 	"github.com/spf13/cobra"
 )
@@ -28,7 +29,7 @@ var noteCommand = &cobra.Command{
 			Note: args[0],
 		}
 		var reply lib.VoidReply
-		err = client.Call("Timer.RPC_Note", noteArgs, &reply)
+		err = client.Call("Daemon.AddNote", noteArgs, &reply)
 		if err != nil {
 			log.Fatal("rpc error: ", err)
 		}
