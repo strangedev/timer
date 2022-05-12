@@ -17,7 +17,19 @@ On Linux with X11 only:
 ```shell
 make
 sudo make install
+```
+
+## Running
+
+Starting manually:
+```
+systemctl --user daemon-reload
 systemctl --user enable --now worktimer
+```
+
+Alternatively you can use the makefile:
+```
+make run-as-service
 ```
 
 ## Commands
