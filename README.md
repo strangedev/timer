@@ -42,6 +42,7 @@ worktimer start # Starts recording times
 worktimer stop # Stops recording times
 worktimer note "Some text" # Records a note in the current time slice so you know what you did at that time
 worktimer status # Prints the status of the timer
+worktimer report YYYY-MM-DD # Outputs stats for a given day
 ```
 
 ## How it works
