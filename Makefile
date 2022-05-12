@@ -1,7 +1,7 @@
 BINARY_NAME=worktimer
 SERVICEFILE_NAME=worktimer.service
 
-PHONY: hash
+PHONY: clean hash
 
 build:
 	GOARCH=amd64 GOOS=linux go build -o ${BINARY_NAME} main.go
@@ -21,6 +21,7 @@ uninstall:
 	-systemctl --user disable --now ${SERVICEFILE_NAME}
 	rm /etc/systemd/user/${SERVICEFILE_NAME}
 
-run-as-service:
+redeploy-service:
 	systemctl --user daemon-reload
 	systemctl --user enable --now worktimer
+	systemctl --user restart worktimer
