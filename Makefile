@@ -15,3 +15,7 @@ uninstall:
 	rm /usr/local/bin/${BINARY_NAME}
 	-systemctl --user disable --now ${SERVICEFILE_NAME}
 	rm /etc/systemd/user/${SERVICEFILE_NAME}
+
+run-as-service:
+	systemctl --user daemon-reload
+	systemctl --user enable --now worktimer
