@@ -1,8 +1,13 @@
 BINARY_NAME=worktimer
 SERVICEFILE_NAME=worktimer.service
 
+PHONY: hash
+
 build:
 	GOARCH=amd64 GOOS=linux go build -o ${BINARY_NAME} main.go
+
+hash: build
+	sha256sum worktimer > worktimer.sha256
 
 clean:
 	go clean

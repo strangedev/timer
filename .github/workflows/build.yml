@@ -1,0 +1,48 @@
+name: build
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@master
+    - name: Install dependencies
+      run: apt install libx11-dev
+    - name: Run make
+      run: make
+
+    - id: create_release
+      name: Create new release on GitHub
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: worktimer ${{ github.ref }}
+        draft: false
+        prerelease: true
+
+    - name: Upload binary to GitHub
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./worktimer
+        asset_name: worktimer
+        asset_content_type: application/octet-stream
+
+    - name: Upload SHA256 to GitHub
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./worktimer.sha256
+        asset_name: worktimer.sha256
+        asset_content_type: text/plain
