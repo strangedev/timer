@@ -21,6 +21,8 @@ long long getIdleMs() {
 
   XScreenSaverInfo info;
   XScreenSaverQueryInfo(display, DefaultRootWindow(display), &info);
+
+  XCloseDisplay(display);
   
   return info.idle;
 }
