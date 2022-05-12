@@ -2,6 +2,8 @@
 
 `worktimer` records active hours in X11 to make writing time sheets less of a pain in the ass.
 
+Runs on Linux with X11 only.
+
 ## Building
 
 You need to have the X11 libs installed.
@@ -12,7 +14,7 @@ make
 
 ## Installing
 
-On Linux with X11 only:
+Build from source or download the binary first.
 
 ```shell
 sudo make install
