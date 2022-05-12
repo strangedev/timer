@@ -46,3 +46,13 @@ jobs:
         asset_path: ./worktimer.sha256
         asset_name: worktimer.sha256
         asset_content_type: text/plain
+
+    - name: Upload service file to GitHub
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./worktimer.service
+        asset_name: worktimer.service
+        asset_content_type: text/plain
