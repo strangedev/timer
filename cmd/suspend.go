@@ -28,7 +28,7 @@ var suspendCommand = &cobra.Command{
 			Reason: "Manual suspend",
 		}
 		var reply lib.VoidReply
-		err = client.Call("Daemom.SuspendTimer", suspendArgs, &reply)
+		err = client.Call("Daemon.SuspendTimer", suspendArgs, &reply)
 		if err != nil {
 			log.Fatal("rpc error: ", err)
 		}

@@ -107,6 +107,11 @@ func (d *Daemon) AddNote(args *NoteArgs, reply *VoidReply) error {
 }
 
 func (d *Daemon) Run(stop chan bool) {
+	x11 := NewX11()
+	if err := x11.Init(); err != nil {
+		log.Fatal(err)
+	}
+
 	rpc.Register(d)
 	rpc.HandleHTTP()
 
@@ -141,7 +146,7 @@ func (d *Daemon) Run(stop chan bool) {
 				continue
 			}
 
-			idleTime, err := GetIdleTime()
+			idleTime, err := x11.GetIdleTime()
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -162,7 +167,7 @@ func (d *Daemon) Run(stop chan bool) {
 				continue
 			}
 
-			currentIdleTime, err := GetIdleTime()
+			currentIdleTime, err := x11.GetIdleTime()
 			if err != nil {
 				log.Fatal(err)
 			}
