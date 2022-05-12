@@ -15,22 +15,18 @@ make
 On Linux with X11 only:
 
 ```shell
-make
 sudo make install
 ```
 
 ## Running
 
-Starting manually:
+Build from source or download the binary first.
+
 ```
-systemctl --user daemon-reload
-systemctl --user enable --now worktimer
+make redeploy-service
 ```
 
-Alternatively you can use the makefile:
-```
-make run-as-service
-```
+Alternatively, grab the service file from the release section and start it manually.
 
 ## Commands
 
