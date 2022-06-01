@@ -1,11 +1,12 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 	"regexp"
 	"strconv"
+	"text/tabwriter"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -69,11 +70,46 @@ var reportCommand = &cobra.Command{
 		}
 
 		report := lib.GenerateReportFor(timeSlices)
-		reportJson, err := json.MarshalIndent(report, "", "  ")
-		if err != nil {
-			log.Fatalf("Could not marshal report: %v", err)
+
+		fmt.Printf("Summary of %v\n", wantedDate)
+		fmt.Println("================================\n")
+		summaryTable := tabwriter.NewWriter(os.Stdout, 0, 2, 1, ' ', 0)
+		fmt.Fprintf(summaryTable, "%s\t%v\n", "Total time worked", report.TotalTimeWorked)
+		fmt.Fprintf(summaryTable, "%s\t%v\n", "Started working at", report.StartedWorkingAt)
+		fmt.Fprintf(summaryTable, "%s\t%v\n", "Stopped working at", report.StoppedWorkingAt)
+		for _, activePeriod := range report.ActivePeriods {
+			for _, note := range activePeriod.Notes {
+				fmt.Fprintf(summaryTable, "%s\t%v\n", "Note", note)
+			}
 		}
 
-		fmt.Println(string(reportJson))
+		summaryTable.Flush()
+		fmt.Println("\n\nActive periods")
+		fmt.Println("--------------------------------")
+		activePeriodsTable := tabwriter.NewWriter(os.Stdout, 0, 2, 1, ' ', 0)
+		for i, activePeriod := range report.ActivePeriods {
+			fmt.Fprintf(activePeriodsTable, "\n%s\t%v\n", "Period", i)
+			fmt.Fprintf(activePeriodsTable, "%s\t%v\n", "Duration", activePeriod.Duration)
+			fmt.Fprintf(activePeriodsTable, "%s\t%v\n", "Started at", activePeriod.Started)
+			fmt.Fprintf(activePeriodsTable, "%s\t%v\n", "Started by", activePeriod.StartedBy)
+			fmt.Fprintf(activePeriodsTable, "%s\t%v\n", "Ended at", activePeriod.Ended)
+			fmt.Fprintf(activePeriodsTable, "%s\t%v\n", "Ended by", activePeriod.EndedBy)
+			for _, note := range activePeriod.Notes {
+				fmt.Fprintf(activePeriodsTable, "%s\t%v\n", "Note", note)
+			}
+		}
+		activePeriodsTable.Flush()
+		fmt.Println("\n\nBreaks")
+		fmt.Println("--------------------------------")
+		breaksTable := tabwriter.NewWriter(os.Stdout, 0, 2, 1, ' ', 0)
+		for i, breakPeriod := range report.Breaks {
+			fmt.Fprintf(breaksTable, "\n%s\t%v\n", "Break", i)
+			fmt.Fprintf(breaksTable, "%s\t%v\n", "Duration", breakPeriod.Duration)
+			fmt.Fprintf(breaksTable, "%s\t%v\n", "Started at", breakPeriod.Started)
+			fmt.Fprintf(breaksTable, "%s\t%v\n", "Started by", breakPeriod.StartedBy)
+			fmt.Fprintf(breaksTable, "%s\t%v\n", "Ended at", breakPeriod.Ended)
+			fmt.Fprintf(breaksTable, "%s\t%v\n", "Ended by", breakPeriod.EndedBy)
+		}
+		breaksTable.Flush()
 	},
 }
