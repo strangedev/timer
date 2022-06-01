@@ -1,5 +1,7 @@
 package lib
 
+import "fmt"
+
 type TimerIsAlreadyStarted struct{}
 
 func (e *TimerIsAlreadyStarted) Error() string {
@@ -24,8 +26,10 @@ func (e *TimerIsNotSuspended) Error() string {
 	return "The timer is not suspended."
 }
 
-type X11Error struct{}
+type X11Error struct {
+	Code int
+}
 
 func (e *X11Error) Error() string {
-	return "X11 call failed."
+	return fmt.Sprintf("X11 call failed (%v)", e.Code)
 }
