@@ -107,9 +107,12 @@ func (d *Daemon) AddNote(args *NoteArgs, reply *VoidReply) error {
 }
 
 func (d *Daemon) Run(stop chan bool) {
-	x11 := NewX11()
+	x11, err := NewX11()
+	if err != nil {
+		log.Panic(err)
+	}
 	if err := x11.Init(); err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	rpc.Register(d)
